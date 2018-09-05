@@ -1,0 +1,4 @@
+[submodule "Curry/pflp"]
+	path = Curry/pflp
+	url = https://github.com/finnteegen/pflp
+	branch = master
