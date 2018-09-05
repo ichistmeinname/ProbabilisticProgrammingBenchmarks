@@ -1,0 +1,105 @@
+var pickChar = function () {
+    return uniformDraw(['a','b']);
+};
+
+var palindrome = function(n) {
+    return helper(1,n);
+};
+
+var helper = function (n,m) {
+    if (n > m) {
+        return true;
+    } else if (n == m) {
+        let x = pickChar();
+        return true;
+    } else {
+        let x1 = pickChar();
+        let x2 = pickChar();
+        if (x1 == x2) {
+            return helper(n+1,m-1);
+        } else
+            return false;
+    }
+};
+
+Infer({model: function () { palindrome(20) }, method: 'enumerate', maxRuntimeInMS: Infinity});
+
+// m-067:WebPPL sad$ time ./node_modules/.bin/webppl stringsFast.wppl
+// 5
+// Marginal:
+//     false : 0.75
+//     true : 0.24999999999999994
+//
+// real	0m1.592s
+// user	0m1.706s
+// sys	0m0.094s
+
+// m-067:WebPPL sad$ time ./node_modules/.bin/webppl stringsFast.wppl
+// 10
+// Marginal:
+//     false : 0.96875
+//     true : 0.031250000000000014
+//
+// real	0m1.584s
+// user	0m1.700s
+// sys	0m0.091s
+
+// m-067:WebPPL sad$ time ./node_modules/.bin/webppl stringsFast.wppl
+// 15
+// Marginal:
+//     false : 0.9921875
+//     true : 0.007812499999999979
+//
+// real	0m1.799s
+// user	0m1.896s
+// sys	0m0.101s
+
+// m-067:WebPPL sad$ time ./node_modules/.bin/webppl stringsFast.wppl 
+// 20
+// Marginal:
+//     false : 0.9990234375
+//     true : 0.0009765625000000026
+//
+// real	0m1.865s
+// user	0m1.946s
+// sys	0m0.103s
+
+// m-067:WebPPL sad$ time ./node_modules/.bin/webppl stringsFast.wppl 
+// 25
+// Marginal:
+//     false : 0.999755859375
+//     true : 0.0002441406249999974
+//
+// real	0m2.099s
+// user	0m2.189s
+// sys	0m0.104s
+
+// m-067:WebPPL sad$ time ./node_modules/.bin/webppl stringsFast.wppl 
+// 30
+// Marginal:
+//     false : 0.999969482421875
+//     true : 0.0000305175781250019
+//
+// real	0m3.810s
+// user	0m3.806s
+// sys	0m0.127s
+
+// m-067:WebPPL sad$ time ./node_modules/.bin/webppl stringsFast.wppl 
+// 35
+// Marginal:
+//     false : 0.9999923706054688
+//     true : 0.000007629394531253835
+//
+// real	0m15.275s
+// user	0m15.296s
+// sys	0m0.216s
+
+// m-067:WebPPL sad$ time ./node_modules/.bin/webppl stringsFast.wppl 
+// 40
+// Marginal:
+//     false : 0.9999990463256836
+//     true : 9.536743164076171e-7
+//
+// real	1m45.114s
+// user	1m43.672s
+// sys	0m0.790s

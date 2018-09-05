@@ -1,0 +1,41 @@
+var raining = function() {
+    return flip(0.2);
+};
+
+var sprinkler = function(r) {
+    if (r) {
+        return flip(0.01)
+    } else {
+        return flip(0.4);
+    }
+};
+
+var grassWet = function(s,r) {
+    if (s && r) {
+        return flip(0.99);
+    } else {
+        if (s && !r) {
+            return flip(0.9);
+        } else {
+            if (!s && r) {
+                return flip(0.8);
+            } else {
+                return flip(0.0);
+            };
+        }
+    };
+};
+
+var grassModel = function () {
+    var r = raining();
+    var s = sprinkler(r);
+    var g = grassWet(s,r);
+    return { isRaining : r, isSprinklerOn : s, isGrassWet : g };
+}
+
+var grassWetWhenRaining = function() {
+    var g = grassModel();
+    return (g.isRaining && g.isGrassWet);
+};
+
+Infer({model: grassWetWhenRaining, method: 'enumerate', maxRuntimeInMS: Infinity});

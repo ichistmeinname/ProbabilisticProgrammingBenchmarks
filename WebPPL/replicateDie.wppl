@@ -1,0 +1,67 @@
+var die = function() {
+    return uniformDraw([1,2,3,4,5,6]);
+};
+
+var replicateDist = function (n, dist) {
+    if (n == 0) {
+        return uniformDraw([[]]);
+    } else {
+        return [dist()].concat(replicateDist(n-1,dist));
+    }
+};
+
+// allSix n = all (== Six) ?? replicateDist n (\ () -> die)
+var allSix = function(n) {
+    var list = replicateDist(n,die);
+    all(function(x) { isSix(x) }, list);
+}
+
+var isSix = function(dist) {
+    var x = dist;
+    return x == 6 ? true : false;
+};
+
+// Output whole model
+// Infer({model: function() { replicateDist(2,die) }});
+// Infer({model: function() { allSix(5) }});
+// Infer({model: function() { isSix(die()) }});
+Infer({model: function() { allSix(5) }, method: 'enumerate', maxRuntimeInMS: Infinity});
+
+/*
+m-067:WebPPL sad$ echo 5; time ./node_modules/.bin/webppl replicateDie.wppl 
+5
+Marginal:
+    false : 0.9998713991769547
+    true : 0.00012860082304526745
+
+real	0m1.894s
+user	0m2.060s
+sys	0m0.104s
+m-067:WebPPL sad$ echo 6; time ./node_modules/.bin/webppl replicateDie.wppl 
+6
+Marginal:
+    false : 0.9999785665294926
+    true : 0.000021433470507544844
+
+real	0m3.910s
+user	0m3.989s
+sys	0m0.146s
+m-067:WebPPL sad$ echo 7; time ./node_modules/.bin/webppl replicateDie.wppl 
+7
+Marginal:
+    false : 0.9999964277549155
+    true : 0.0000035722450845908338
+
+real	0m19.798s
+user	0m19.738s
+sys	0m0.301s
+m-067:WebPPL sad$ echo 8; time ./node_modules/.bin/webppl replicateDie.wppl 
+8
+Marginal:
+    false : 0.9999994046258193
+    true : 5.953741807650915e-7
+
+real	2m38.014s
+user	2m34.688s
+sys	0m0.972s
+*/
