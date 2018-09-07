@@ -1,9 +1,7 @@
 # Benchmark Comparisions
 
 This repository contains benchmarks for several examples of
-probabilistic programs implemented in the journal version of the paper
-[Probabilistic Functional Logic Programming](https://www-ps.informatik.uni-kiel.de/%7Esad/padl2018-preprint.pdf) (to be published --
-hopefully!). The paper introduces a library, [PFLP](https://github.com/finnteegen/pflp), for probabilistic programming in the functional logic language [Curry](https://www-ps.informatik.uni-kiel.de/currywiki/).
+probabilistic programs implemented with [PFLP](https://github.com/finnteegen/pflp), a library for probabilistic programming in the functional logic language [Curry](https://www-ps.informatik.uni-kiel.de/currywiki/).
 
 Currently, we translated the examples
 
