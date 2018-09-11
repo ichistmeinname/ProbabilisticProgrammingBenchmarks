@@ -21,12 +21,13 @@ var isSix = function(dist) {
     return x == 6 ? true : false;
 };
 
-// Output whole model
-// Infer({model: function() { replicateDist(2,die) }});
-// Infer({model: function() { allSix(5) }});
-// Infer({model: function() { isSix(die()) }});
-Infer({model: function() { allSix(5) }, method: 'enumerate', maxRuntimeInMS: Infinity});
-
+var args = process.argv;
+if (args.length > 3) {
+    if (args.length == 4) {
+        var len = args[3];
+        Infer({model: function() { allSix(len) }, method: 'enumerate', maxRuntimeInMS: Infinity});
+    }
+}
 /*
 m-067:WebPPL sad$ echo 5; time ./node_modules/.bin/webppl replicateDie.wppl 
 5

@@ -1,3 +1,7 @@
+process.argv.forEach(function (val, index, array) {
+  console.log(index + ': ' + val);
+});
+
 var pickChar = function () {
     return uniformDraw(['a','b']);
 };
@@ -38,8 +42,16 @@ var helper = function (str,n,max) {
     }
 };
 
-// Infer({model: function () { isPalindrome(randomString(20)) }, method: 'enumerate', maxRuntimeInMS: Infinity});
-Infer({model: function () { hasConsecutiveBs(randomString(20)) }, method: 'enumerate', maxRuntimeInMS: Infinity});
+var args = process.argv;
+if (args.length > 3) {
+    if (args.length == 4) {
+        var len = args[3];
+        Infer({model: function () { isPalindrome(randomString(len)) }, method: 'enumerate', maxRuntimeInMS: Infinity});
+    } else if ((process.argv).length == 5) {
+        var len = args[4];
+        Infer({model: function () { hasConsecutiveBs(randomString(len)) }, method: 'enumerate', maxRuntimeInMS: Infinity});
+    }
+}
 
 // # Palindrome
 

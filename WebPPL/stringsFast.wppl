@@ -22,7 +22,13 @@ var helper = function (n,m) {
     }
 };
 
-Infer({model: function () { palindrome(20) }, method: 'enumerate', maxRuntimeInMS: Infinity});
+var args = process.argv;
+if (args.length > 3) {
+    if (args.length == 4) {
+        var len = args[3];
+        Infer({model: function () { palindrome(len) }, method: 'enumerate', maxRuntimeInMS: Infinity});
+    }
+}
 
 // m-067:WebPPL sad$ time ./node_modules/.bin/webppl stringsFast.wppl
 // 5
