@@ -2,8 +2,9 @@
 % Tabling is an advanced form of caching that is
 % used to speed-up the execution of logic programs
 % and that allows certain types of cyclic programs.
-  
+
 % we need to add some kind of ID in order to "disable" tabling
+  
 (1/6)::die(D,1).
 (1/6)::die(D,2).
 (1/6)::die(D,3).
@@ -25,17 +26,15 @@ someDie(N) :- die(42,N).
 dieSix :- die(42,N), isSix(N).
 allRepSix(N) :- replicateDie(N,XS), allSix(XS).
 
-% query(dieSix).
-% query(replicateDie(2,XS)).
+query(allRepSix(N)) :- len(N).
 
-  % The use of evidence does make much sense, as it enables a conditional probability,
-  % thus, when using `evidence`, the query has probability 1.
+% The use of evidence does make much sense, as it enables a conditional probability,
+% thus, when using `evidence`, the query has probability 1.
 % evidence(die(1,6)).
 % evidence(die(2,6)).
 % evidence(die(3,6)).
-% evidence(die(4,6)).
-  
-query(allRepSix(5)).
+% evidence(die(4,6)).  
+% query(allRepSix(5)).
 
 % m-067:ProbLog sad$ time problog replicateDie.pl 
 % allRepSix(3):	0.0046296296

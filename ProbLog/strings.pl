@@ -25,9 +25,9 @@ string_is_palindrome(N,L) :- random_string(N,L),palindrome(L).
 string_with_bb(N) :- string_with_bb(N,_).
 string_with_bb(N,L) :- random_string(N,L),twoBs(L).
 
-len(10).
-evidence(string_is_palindrome(X)) :- len(X).
-query(string_with_bb(X)) :- len(X).
+%len(5).
+%evidence(string_is_palindrome(X)) :- len(X).
+%query(string_is_palindrome(X)) :- len(X).
 
 % m-067:ProbLog sad$ time problog strings.pl 
 % string_is_palindrome(10):	0.03125   
