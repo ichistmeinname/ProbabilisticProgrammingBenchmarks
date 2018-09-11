@@ -6,6 +6,7 @@ You need to set the following import path in the REPL.
 
 -}
 
+import System
 import PFLP
 
 data Side = One | Two | Three | Four | Five | Six deriving Eq
@@ -15,6 +16,13 @@ die = uniform [One,Two,Three,Four,Five,Six]
 
 allSix :: Int -> Probability
 allSix n = all (==Six) ?? replicateDist n (\() -> die)
+
+main :: IO ()
+main = getArgs >>= \args ->
+       case args of
+         nArg : _ -> let n = read nArg
+                     in print (allSix n) >> return ()
+         _ -> return ()
 
 {-
 ReplicateDie> allSix 5

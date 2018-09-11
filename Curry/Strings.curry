@@ -6,6 +6,7 @@ You need to set the following import path in the REPL.
 
 -}
 
+import System
 import PFLP
 
 pickChar :: Dist Char
@@ -27,7 +28,14 @@ consecutiveBs :: String -> Bool
 consecutiveBs bs = case  bs of
                  []                  -> False
                  ('b'  : 'b' : _  )  -> True
-                 (_    : bs       )  -> consecutiveBs bs
+                 (_    : bs'      )  -> consecutiveBs bs'
+
+main :: IO ()
+main = getArgs >>= \args ->
+       print (case args of
+                "bs" : nString : _ -> consecutiveBs ?? randomString (read nString)
+                "fast" : nString : _ -> id ?? palindromeEfficient3 (read nString)
+                nString : _        -> palindrome ?? randomString (read nString)) >> return ()
 
 {-
 tplp> palindrome ?? randomString 30
@@ -88,9 +96,9 @@ palindromeEfficient n = palindrome' 1 n
 -- Evaluating expression: id ?? palindromeEfficient2 30
 -- 3.0517578125e-5
 
--- real	0m24.715s
--- user	0m22.332s
--- sys	0m2.300s
+-- real 0m24.715s
+-- user 0m22.332s
+-- sys  0m2.300s
 palindromeEfficient2 :: Int -> Dist Bool
 palindromeEfficient2 n = palindrome' 1 n
  where palindrome' n1 n2  | n1 == n2   = pickChar >>>= \ _ -> certainly True
@@ -98,10 +106,10 @@ palindromeEfficient2 n = palindrome' 1 n
                           | otherwise  = pickChar >>>= \c1 ->
                                          pickChar >>>= \c2 ->
                                          if c1 == c2 then palindrome' (n1+1) (n2-1) else certainly False
--- only minimal smaller
+-- only minimally more efficient
 palindromeEfficient3 :: Int -> Dist Bool
 palindromeEfficient3 n = palindrome' 1 n
- where palindrome' n1 n2  | n1 == n2   = pickChar >>>= \ c -> certainly True
+ where palindrome' n1 n2  | n1 == n2   = pickChar >>>= \ _ -> certainly True
                           | n1 > n2    = certainly True
                           | otherwise  = pickChar >>>= \c1 ->
                                          pickChar >>>= \c2 ->

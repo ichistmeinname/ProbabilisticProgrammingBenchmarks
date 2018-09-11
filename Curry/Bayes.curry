@@ -11,6 +11,9 @@ import Float
 
 {- Wet grass example -}
 
+bernoulli :: Probability -> Dist Bool
+bernoulli p = enum [True,False] [p, 1 - p]
+
 rain :: Dist Bool
 rain = bernoulli 0.2
 
@@ -31,3 +34,6 @@ grassModel = rain >>>= \r -> sprinkler r >>>= \s -> grassWet s r >>>= \g -> cert
 
 grassWetWhenRain_ :: Probability
 grassWetWhenRain_ = (\model -> r_ model && g_ model) ?? grassModel
+
+main :: IO ()
+main = return grassWetWhenRain_ >> return ()
