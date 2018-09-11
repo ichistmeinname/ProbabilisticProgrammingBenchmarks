@@ -109,8 +109,7 @@ main = shakeArgs shakeOptions $ do
               case out2 of
                 ExitFailure _ -> putNormal ("Could not find executable " ++ npm ++ ", please install it first.")
                 _ -> do
-                  cmd_ "cd" webppl
-                  cmd_ npm "install" "webppl"
+                  cmd_ npm "install" "--prefix" webppl "webppl"
             _ -> return ()
         _ -> return ()
 
@@ -123,8 +122,7 @@ main = shakeArgs shakeOptions $ do
           case out2 of
             ExitFailure _ -> putNormal ("Could not find executable " ++ pip ++ ", please install it first.")
             _ -> do
-              cmd_ "cd" problog
-              cmd_ pip "install" "problog"
+              cmd_ pip "install" "problog" "-t" problog
         _ -> return ()
 
     phony curryDir $ do
