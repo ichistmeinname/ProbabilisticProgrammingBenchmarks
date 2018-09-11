@@ -1,3 +1,10 @@
 Curry_Main_Goal.curry
 .curry
 node_modules
+Curry/Strings
+Curry/ReplicateDie
+Curry/Bayes
+.cabal-sandbox
+cabal.sandbox.config
+_shake
+.shake
