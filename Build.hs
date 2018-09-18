@@ -48,7 +48,7 @@ main = shakeArgs shakeOptions $ do
     phony "benchmarks" $ do
       cmd_ "mkdir -p" "html"
       need ["dependencies"]
-      need ["strings", "stringsFast", "replicate", "bayes"]
+      need ["strings", "stringsFast", "bayes", "replicate"]
 
     (curryDir </> "*") %> \out -> do
       let file = takeBaseName out
@@ -81,8 +81,8 @@ main = shakeArgs shakeOptions $ do
 
       putNormal "Benchmark replicated die"
       let curryArgs = makeArgs Curry "ReplicateDie" "" [2,3,4,5,10,15,25,50,100,200]
-          probArgs = makeArgs ProbLog (problog </> "replicateDie.py") "" [2,3,4,5,10]
-          webArgs = makeArgs WebPPL (webppl </> "replicateDie.wppl") "" [2,3,4,5,10,15]
+          probArgs = makeArgs ProbLog (problog </> "replicateDie.py") "" [2,3,4,5]
+          webArgs = makeArgs WebPPL (webppl </> "replicateDie.wppl") "" [2,3,4,5,6,7]
           args = curryArgs ++ probArgs ++ webArgs
       cmd_ benchExe args "--output html/ReplicateDie.html"
     
