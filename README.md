@@ -5,10 +5,10 @@ probabilistic programs implemented with [PFLP](https://github.com/finnteegen/pfl
 
 Currently, we translated the examples
 
-[x] Rolling only sixes  
-[x] Grass model as Bayesian Network  
+[x] Rolling only sixes ([dice example](https://rawgit.com/ichistmeinname/ProbabilisticProgrammingBenchmarks/master/html/ReplicateDie.html)  
+[x] Grass model as Bayesian Network ([grass example](https://rawgit.com/ichistmeinname/ProbabilisticProgrammingBenchmarks/master/html/Bayes.html))  
 [x] Testing random strings for specific characterics (being a
-palindrome, containing the subsequence 'bb')  
+palindrome, containing the subsequence 'bb') ([naive bb](https://rawgit.com/ichistmeinname/ProbabilisticProgrammingBenchmarks/master/html/StringsBs.html), [naive palindrome](https://rawgit.com/ichistmeinname/ProbabilisticProgrammingBenchmarks/master/html/StringsPalindrome.html), [fast palindrome](https://rawgit.com/ichistmeinname/ProbabilisticProgrammingBenchmarks/master/html/StringsPalindromeFast.html))  
 [ ] more?  
 
 into the following probabilistic languages.
