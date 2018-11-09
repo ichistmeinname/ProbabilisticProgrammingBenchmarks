@@ -33,7 +33,7 @@ collectArgs exeName arg1 args =
       probArgs = makeArgs ProbLog (problog </> exeNameLower <.> "py") arg1 args
       webArgs = makeArgs WebPPL (webppl </> exeNameLower <.> "wppl") arg1 args
   in curryArgs ++ probArgs ++ webArgs
-  
+
 main :: IO ()
 main = shakeArgs shakeOptions $ do
     want ["benchmarks"]
@@ -48,7 +48,9 @@ main = shakeArgs shakeOptions $ do
     phony "benchmarks" $ do
       cmd_ "mkdir -p" "html"
       need ["dependencies"]
-      need ["strings", "stringsFast", "bayes", "replicate"]
+--      need ["strings", "stringsFast", "bayes", "replicate", "curry-strings", "curry-strings-vs-fast", "curry-die"
+--           , "webppl-strings", "webppl-die"]
+      need ["curry-die", "curry-strings"]
 
     (curryDir </> "*") %> \out -> do
       let file = takeBaseName out
@@ -80,9 +82,9 @@ main = shakeArgs shakeOptions $ do
       need [curryDir </> "ReplicateDie"]
 
       putNormal "Benchmark replicated die"
-      let curryArgs = makeArgs Curry "ReplicateDie" "" [2,3,4,5,10,15,25,50,100,200]
+      let curryArgs = makeArgs Curry "ReplicateDie" "" [2,3,4,5,6,7,8,9,10]
           probArgs = makeArgs ProbLog (problog </> "replicateDie.py") "" [2,3,4,5]
-          webArgs = makeArgs WebPPL (webppl </> "replicateDie.wppl") "" [2,3,4,5,6,7]
+          webArgs = makeArgs WebPPL (webppl </> "replicateDie.wppl") "" [2,3,4,5,6,7,8,9]
           args = curryArgs ++ probArgs ++ webArgs
       cmd_ benchExe args "--output html/ReplicateDie.html"
     
@@ -92,6 +94,39 @@ main = shakeArgs shakeOptions $ do
       putNormal "Benchmark bayesian network"
       let args = collectArgs "Bayes" "" [""]
       cmd_ benchExe args "--output html/Bayes.html"
+
+    phony "webppl-strings" $ do
+      let webArgs1 = makeArgs WebPPL (webppl </> "strings.wppl") "" [5,10,15,20,25]
+          webArgs2 = makeArgs WebPPL (webppl </> "stringsFast.wppl") "" [5,10,15,20,25,30,35,40,45,50]
+      cmd_ benchExe (webArgs1 ++ webArgs2) "--output html/WebPPLStrings.html"
+
+    phony "webppl-die" $ do
+      let webArgs = makeArgs WebPPL (webppl </> "replicateDie.wppl") "" [2,3,4,5,6,7,8,9]
+      cmd_ benchExe webArgs "--output html/WebPPLStrings.html"
+
+    phony "curry-strings-vs-fast" $ do
+      need [curryDir </> "Strings"]
+
+      putNormal "Benchmark Curry naive strings vs fast strings"
+      let curryArgs = makeArgs Curry "Strings" ""     [5,10,15,20,25,30,35]
+          probArgs  = makeArgs ProbLog (problog </> "stringsFast.py") "" [5,10,15,20,25,30,35]
+          webArgs   = makeArgs WebPPL (webppl </> "stringsFast.wppl") "" [5,10,15,20,25,30,35]
+          argsPF    = curryArgs ++ probArgs ++ webArgs
+      cmd_ benchExe argsPF "--output html/CurryStringsVsFast.html"
+
+    phony "curry-strings" $ do
+      need [curryDir </> "Strings"]
+
+      putNormal "Benchmark Curry Strings"
+      let curry     = makeArgs Curry "Strings" ""     [5,10,15,20,25,30]
+          curryFast = makeArgs Curry "Strings" "fast" [5,10,15,20,25,30,35,40]
+      cmd_ benchExe (curry ++ curryFast) "--output html/CurryStrings.html"
+
+    phony "curry-die" $ do
+      need [curryDir </> "ReplicateDie"]
+
+      let curry = makeArgs Curry "ReplicateDie" "" [25,50,100,250,500,1000,2500]
+      cmd_ benchExe curry "--output html/CurryDie.html"
 
     phony "dependencies" $ do
       need [curryDir, webppl, problog, bench]
