@@ -26,7 +26,7 @@ someDie(N) :- die(42,N).
 dieSix :- die(42,N), isSix(N).
 allRepSix(N) :- replicateDie(N,XS), allSix(XS).
 
-query(allRepSix(N)) :- len(N).
+query(allRepSix(5)).
 
 % The use of evidence does make much sense, as it enables a conditional probability,
 % thus, when using `evidence`, the query has probability 1.
