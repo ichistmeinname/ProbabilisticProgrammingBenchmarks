@@ -8,3 +8,6 @@ Curry/Bayes
 cabal.sandbox.config
 _shake
 .shake
+WebPPL/package-lock.json
+.DS_Store
+Anglican/leinigen/lein
