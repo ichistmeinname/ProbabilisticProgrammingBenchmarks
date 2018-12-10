@@ -6,6 +6,8 @@ You need to set the following import path in the REPL.
 
 -}
 
+import System
+
 import PFLP
 import Float
 
@@ -35,5 +37,25 @@ grassModel = rain >>>= \r -> sprinkler r >>>= \s -> grassWet s r >>>= \g -> cert
 grassWetWhenRain_ :: Probability
 grassWetWhenRain_ = (\model -> r_ model && g_ model) ?? grassModel
 
+grassWetQuery :: Probability
+grassWetQuery = g_ ?? grassModel
+
+grassWetCond :: Probability
+grassWetCond = condProb [r_] [g_] grassModel
+
+allProb :: [a -> Bool] -> Dist a -> Probability
+allProb ps dx = (\x -> all (\p -> p x) ps) ?? dx
+
+condProb :: [a -> Bool] -> [a -> Bool] -> Dist a -> Probability
+condProb ps1 ps2 dx = allProb (ps1 ++ ps2) dx /. allProb ps2 dx
+
+
 main :: IO ()
-main = return grassWetWhenRain_ >> return ()
+main = getArgs >>= \args ->
+       case args of
+         nArg : _ -> let n = read nArg
+                     in (case n of
+                          1 -> print grassWetQuery
+                          2 -> print grassWetWhenRain_
+                          _ -> print grassWetCond) >> return ()
+         _ -> return ()

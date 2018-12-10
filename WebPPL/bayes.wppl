@@ -38,4 +38,32 @@ var grassWetWhenRaining = function() {
     return (g.isRaining && g.isGrassWet);
 };
 
-Infer({model: grassWetWhenRaining, method: 'enumerate', maxRuntimeInMS: Infinity});
+var grassWetQuery = function() {
+    var g = grassModel();
+    return (g.isGrassWet);
+};
+
+var sprinklerQuery = function() {
+    var g = grassModel();
+    return (g.isSprinklerOn);
+};
+
+var grassWetCond = function() {
+    var g = grassModel();
+    var b = (g.isRaining && g.isGrassWet);
+    condition (g.isGrassWet);
+    return b;
+};
+
+var args = process.argv;
+console.log(args);
+if (args.length == 4) {
+   var number = args[3];
+   if (number == 1) {
+     Infer({model: grassWetWhenRaining, method: 'enumerate', maxRuntimeInMS: Infinity});
+   } else if (number == 2) {
+    Infer({model: sprinklerQuery, method: 'enumerate', maxRuntimeInMS: Infinity});
+   } else {
+    Infer({model: grassWetCond, method: 'enumerate', maxRuntimeInMS: Infinity});
+   }
+}

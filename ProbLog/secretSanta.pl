@@ -49,6 +49,9 @@ ppickRound2([],_,[]).
 ppickRound2([P],[P],[failedGame]).
 ppickRound2([P|Ps], Hat, [(P,V)|Arrs]) :- delete(Hat,P,HatTemp), pPicks(P,HatTemp,V), delete(Hat,V,HatNew), ppickRound2(Ps,HatNew, Arrs).
 
+isValid([],true).
+isValid([X|Xs],false) :- X == failedGame.
+isValid([X|Xs],Bool) :- X \= failedGame, isValid(Xs,Bool).
 
 santa1(N,Arrs) :- hat(N,Xs), pickRound(Xs,Arrs).
 santa1(N) :- santa1(N,_).
@@ -70,10 +73,19 @@ santa4(N) :- santa4(N,_).
 santa41(N) :- santa41(N,_).
 santa42(N) :- santa42(N,_).
 
-query(santa41(3)).
-query(santa42(3)).
-query(santa3(3)).
-query(santa2(3)).
-query(santa21(3)).
-query(santa22(3)).
-query(santa1(3)).
+santa51(N,Bool) :- hat(N,Xs), ppickRound2(Xs,Arrs), isValid(Arrs,Bool).
+santa52(N,Bool) :- hat(N,Xs), ppickRound(Xs,Arrs), isValid(Arrs,Bool).
+
+query(santa51(3,X)).
+query(santa52(3,X)).
+%query(santa41(10)).
+%query(santa42(5)).
+%query(santa21(10)).
+%query(santa22(5)).
+% query(santa41(3)).
+% query(santa42(3)).
+% query(santa3(3)).
+% query(santa2(3)).
+% query(santa21(3)).
+% query(santa22(3)).
+% query(santa1(3)).

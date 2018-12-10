@@ -1,7 +1,3 @@
-process.argv.forEach(function (val, index, array) {
-  console.log(index + ': ' + val);
-});
-
 var pickChar = function () {
     return uniformDraw(['a','b']);
 };
@@ -85,7 +81,7 @@ if (args.length > 3) {
 // user	0m4.212s
 // sys	0m0.130s
 
-// m-067:WebPPL sad$ time ./node_modules/.bin/webppl strings.wppl 
+// m-067:WebPPL sad$ time ./node_modules/.bin/webppl strings.wppl
 // 20
 // Marginal:
 //     false : 0.9990234375
@@ -108,7 +104,7 @@ if (args.length > 3) {
 // user	0m1.734s
 // sys	0m0.099s
 
-// m-067:WebPPL sad$ time ./node_modules/.bin/webppl strings.wppl 
+// m-067:WebPPL sad$ time ./node_modules/.bin/webppl strings.wppl
 // 10
 // Marginal:
 //     true : 0.8593750000000001
@@ -118,7 +114,7 @@ if (args.length > 3) {
 // user	0m1.912s
 // sys	0m0.104s
 
-// m-067:WebPPL sad$ time ./node_modules/.bin/webppl strings.wppl 
+// m-067:WebPPL sad$ time ./node_modules/.bin/webppl strings.wppl
 // 15
 // Marginal:
 //     true : 0.9512634277343744
@@ -128,7 +124,7 @@ if (args.length > 3) {
 // user	0m4.456s
 // sys	0m0.139s
 
-// m-067:WebPPL sad$ time ./node_modules/.bin/webppl strings.wppl 
+// m-067:WebPPL sad$ time ./node_modules/.bin/webppl strings.wppl
 // 20
 // Marginal:
 //     true : 0.9831094741821279
