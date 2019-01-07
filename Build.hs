@@ -1,12 +1,12 @@
-import Data.List (intercalate)
-import Data.Char (toLower)
+import           Data.Char                  (toLower)
+import           Data.List                  (intercalate)
 
-import System.Exit (ExitCode(..))
+import           System.Exit                (ExitCode (..))
 
-import Development.Shake
-import Development.Shake.Command
-import Development.Shake.FilePath
-import Development.Shake.Util
+import           Development.Shake
+import           Development.Shake.Command
+import           Development.Shake.FilePath
+import           Development.Shake.Util
 
 data Tool = Curry | WebPPL | ProbLog
 
@@ -44,19 +44,20 @@ main = shakeArgs shakeOptions $ do
       cmd_ "rm Curry/Strings"
       cmd_ "rm Curry/ReplicateDie"
       cmd_ "rm Curry/Bayes"
+      cmd_ "rm Curry/SecretSanta"
 
     phony "benchmarks" $ do
       cmd_ "mkdir -p" "html"
       need ["dependencies"]
 --      need ["strings", "stringsFast", "bayes", "replicate", "curry-strings", "curry-strings-vs-fast", "curry-die"
---           , "webppl-strings", "webppl-die"]
-      need ["curry-die", "curry-strings"]
+--           , "webppl-strings", "webppl-die", "santa"]
+      need ["santa"]
 
     (curryDir </> "*") %> \out -> do
       let file = takeBaseName out
       putNormal ("Save Curry executable ./" ++ file)
-      cmd_ kics2 ":set v0" ":set path" pflpDep ":l" (out <.> "curry") ":save :quit"
-      
+      cmd_ kics2 ":set v0" ":set dfs" ":set path" pflpDep ":l" (out <.> "curry") ":save :quit"
+
     phony "strings" $ do
       need [curryDir </> "Strings"]
 
@@ -87,13 +88,51 @@ main = shakeArgs shakeOptions $ do
           webArgs = makeArgs WebPPL (webppl </> "replicateDie.wppl") "" [2,3,4,5,6,7,8,9]
           args = curryArgs ++ probArgs ++ webArgs
       cmd_ benchExe args "--output html/ReplicateDie.html"
-    
+
     phony "bayes" $ do
       need [curryDir </> "Bayes"]
 
       putNormal "Benchmark bayesian network"
-      let args = collectArgs "Bayes" "" [""]
+      let args = collectArgs "Bayes" "" [1,2,3]
       cmd_ benchExe args "--output html/Bayes.html"
+
+    phony "pakcs" $
+      let benchPakcs (exeName,shellFile,additionalArg, inputs) = do
+            putNormal ("Save Curry executable " ++ exeName)
+            cmd_ "pakcs" ":set v0" ":set path" pflpDep ":l" ((curryDir </> exeName) <.> "curry") ":save :quit"
+
+            putNormal ("Benchmark " ++ exeName)
+            let argsC = map (\arg -> intercalate " " [shellFile, show arg, additionalArg]) inputs
+            cmd_ benchExe argsC "--output" ("html" </> (exeName ++ "PAKCS") <.> "html")
+      in mapM_ benchPakcs [("SecretSanta","./santa.sh", "wofailed", [2..8])
+                         , ("ReplicateDie","./replicate.sh", "", [2..10])
+                         , ("Bayes","./bayes.sh", "", [1..3])
+                         , ("Strings","./strings.sh", "", [5,10,15,20,25,30])
+                         , ("Strings","./strings.sh", "fast", [5,10,15,20,25,30])
+                         , ("SecretSanta","./santa.sh", "", [2..8])
+                         ]
+
+    phony "santa" $ do
+
+      putNormal "Benchmark secret santa"
+      let argsP = makeArgs ProbLog (problog </> "secretSanta.py") "" [2..8]
+          argsW = makeArgs WebPPL (webppl </> "secretSanta.wppl") "" [2..10]
+      cmd_ benchExe (argsP ++ argsW) "--output html/SecretSantaExtras.html"
+
+      putNormal "Benchmark secret santa with modified hat"
+      let argsP = makeArgs ProbLog (problog </> "secretSanta.py") "wofailed" [2..8]
+          argsW = makeArgs WebPPL (webppl </> "secretSanta.wppl") "wofailed" [2..10]
+      cmd_ benchExe (argsP ++ argsW) "--output html/SecretSantaModifiedHatExtras.html"
+
+    phony "stringsFast" $ do
+      need [curryDir </> "Strings"]
+
+      putNormal "Benchmark palindrome fast"
+      let curryArgs = makeArgs Curry "Strings" "fast" [5,10,15,20,25]
+          probArgs = makeArgs ProbLog (problog </> "stringsFast.py") "" [5,10,15,20,25]
+          webArgs = makeArgs WebPPL (webppl </> "stringsFast.wppl") "" [5,10,15,20,25]
+          argsPF = curryArgs ++ probArgs ++ webArgs
+      cmd_ benchExe argsPF "--output html/StringsPalindromeFast.html"
 
     phony "webppl-strings" $ do
       let webArgs1 = makeArgs WebPPL (webppl </> "strings.wppl") "" [5,10,15,20,25]
@@ -102,7 +141,12 @@ main = shakeArgs shakeOptions $ do
 
     phony "webppl-die" $ do
       let webArgs = makeArgs WebPPL (webppl </> "replicateDie.wppl") "" [2,3,4,5,6,7,8,9]
-      cmd_ benchExe webArgs "--output html/WebPPLStrings.html"
+      cmd_ benchExe webArgs "--output html/WebPPLDie.html"
+
+    phony "webppl-santa" $ do
+      let webArgs1 = makeArgs WebPPL (webppl </> "secretSanta.wppl") "wofailed" [2,3,4,5,6,7,8,9,10]
+      let webArgs2 = makeArgs WebPPL (webppl </> "secretSanta.wppl") "" [2,3,4,5,6,7,8,9,10]
+      cmd_ benchExe (webArgs1 ++ webArgs2) "--output html/WebPPLSanta.html"
 
     phony "curry-strings-vs-fast" $ do
       need [curryDir </> "Strings"]
